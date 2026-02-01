@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+      "id": "06fb",
+      "name": "Swejal",
+      "email": "swejal@gmail.com",
+      "phone": "7418529638",
+      "pass": "Swejal@123"
+    },
+    {
+      "id": "a60c",
+      "name": "Mayank",
+      "email": "mayank@gmail.com",
+      "phone": "8529637410",
+      "pass": "Mayank@123"
+    }
+  ]
+}
