@@ -31,10 +31,12 @@ const Login = () => {
             return data.pass === value.pass
         })
 
+
         if (!email && !pass) {
             alert("Invalid email and pass")
         }
         else {
+            localStorage.setItem("user_id", JSON.stringify(pass.id))
             navigate("/user")
         }
 

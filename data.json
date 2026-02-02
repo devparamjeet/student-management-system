@@ -13,6 +13,13 @@
       "email": "mayank@gmail.com",
       "phone": "8529637410",
       "pass": "Mayank@123"
+    },
+    {
+      "id": "20eb",
+      "name": "Anand",
+      "email": "anand@gmail.com",
+      "phone": "9638527410",
+      "pass": "Anand@123"
     }
   ]
 }

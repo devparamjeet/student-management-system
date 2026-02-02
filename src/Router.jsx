@@ -4,6 +4,10 @@ import App from "./App";
 import MainOutlet from './MainOutlet';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import UserOutlet from './UserOutlet';
+import UserProfile from './pages/UserProfile';
+import UserSettings from './pages/UserSettings';
+import UserAnalytics from './pages/UserAnalytics';
 
 const route = createBrowserRouter([
     {
@@ -17,7 +21,13 @@ const route = createBrowserRouter([
     },
     {
         path: "/user",
-        element: <App />
+        element: <UserOutlet />,
+        children: [
+            { index: true, element: <App /> },
+            { path: "profile", element: <UserProfile /> },
+            { path: "analytics", element: <UserAnalytics /> },
+            { path: "settings", element: <UserSettings /> },
+        ]
     },
 ])
 
