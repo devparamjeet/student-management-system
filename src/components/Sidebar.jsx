@@ -23,6 +23,7 @@ const Sidebar = () => {
 
                 <li className="hover:text-red-400 cursor-pointer" onClick={() => {
                     localStorage.removeItem("user_id")
+                    localStorage.removeItem("user_token")
                     navigate("/login")
                 }}>🚪 Logout</li>
 

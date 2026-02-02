@@ -8,7 +8,7 @@ const Signup = () => {
         name: "",
         email: "",
         phone: "",
-        pass: ""
+        password: ""
     })
 
     // To create a replica/clone of navigation function(useNavigation())
@@ -22,7 +22,8 @@ const Signup = () => {
         // to prevent page reload
         e.preventDefault()
 
-        let url = "http://localhost:3000/users"
+        // let url = "http://localhost:3000/users"
+        let url = "https://freeapi.gravitycoding.com/api/users"
         let resp = await fetch(url, {
             method: "POST",
             headers: {
@@ -95,8 +96,8 @@ const Signup = () => {
                         </label>
                         <input
                             type="password"
-                            name="pass"
-                            value={data.pass}
+                            name="password"
+                            value={data.password}
                             onChange={handleChange}
                             placeholder="Create a password"
                             className="w-full px-4 py-2 bg-neutral-900 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"

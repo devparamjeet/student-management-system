@@ -6,7 +6,7 @@ const Login = () => {
     const [users, setUsers] = useState([])
     const [data, setData] = useState({
         email: "",
-        pass: ""
+        password: ""
     })
 
     let navigate = useNavigate()
@@ -18,25 +18,31 @@ const Login = () => {
     let handleLogin = async (e) => {
         e.preventDefault();
 
-        let url = "http://localhost:3000/users"
-        let resp = await fetch(url)
+        let url = "http://localhost:5000/api/login"
+        // let url = "https://freeapi.gravitycoding.com/api/login"
+        let resp = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': "application/json"
+            },
+            body: JSON.stringify({
+                email: data.email,
+                password: data.password
+            })
+        })
         let result = await resp.json()
         await setUsers(result)
 
-        // Check Credentials
-        let email = users.find((value) => {
-            return data.email === value.email
-        })
-        let pass = users.find((value) => {
-            return data.pass === value.pass
-        })
+        console.log(result)
 
 
-        if (!email && !pass) {
+        if (result.message !== "Login successful") {
             alert("Invalid email and pass")
         }
         else {
-            localStorage.setItem("user_id", JSON.stringify(pass.id))
+            localStorage.setItem("user_token", JSON.stringify(result.token))
+            localStorage.setItem("user_id", JSON.stringify(result.user._id
+            ))
             navigate("/user")
         }
 
@@ -73,8 +79,8 @@ const Login = () => {
                         </label>
                         <input
                             type="password"
-                            name="pass"
-                            value={data.pass}
+                            name="password"
+                            value={data.password}
                             onChange={handleChange}
                             placeholder="Enter your password"
                             className="w-full px-4 py-2 bg-neutral-900 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"

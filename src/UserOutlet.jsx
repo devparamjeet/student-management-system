@@ -11,7 +11,9 @@ const UserOutlet = () => {
 
     useEffect(() => {
         let callAPI = async () => {
-            let resp = await fetch("http://localhost:3000/users/" + id)
+            let url = "http://localhost:5000/api/user/" + id
+            // let api = "http://localhost:3000/users/"
+            let resp = await fetch(url)
             let res = await resp.json()
             await setData(res)
             // console.log(res)
