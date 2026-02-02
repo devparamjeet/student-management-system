@@ -18,8 +18,8 @@ const Login = () => {
     let handleLogin = async (e) => {
         e.preventDefault();
 
-        let url = "http://localhost:5000/api/login"
-        // let url = "https://freeapi.gravitycoding.com/api/login"
+        // let url = "http://localhost:5000/api/login"
+        let url = "https://freeapi.gravitycoding.com/api/login"
         let resp = await fetch(url, {
             method: 'POST',
             headers: {

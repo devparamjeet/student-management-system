@@ -11,8 +11,8 @@ const UserOutlet = () => {
 
     useEffect(() => {
         let callAPI = async () => {
-            let url = "http://localhost:5000/api/user/" + id
-            // let api = "http://localhost:3000/users/"
+            // let url = "http://localhost:5000/api/user/" + id
+            let url = "https://freeapi.gravitycoding.com/api/user/" + id
             let resp = await fetch(url)
             let res = await resp.json()
             await setData(res)
