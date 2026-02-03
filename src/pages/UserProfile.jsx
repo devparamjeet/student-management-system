@@ -1,10 +1,63 @@
-import React, { use } from "react";
+import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
 const UserProfile = () => {
 
     const [user, setUser] = useOutletContext()
-    console.log(user)
+    const [updatedUser, setUpdatedUser] = useState({})
+    const [pass, setPass] = useState("")
+    const [isEdit, setIsEdit] = useState(false)
+    const [isPass, setIsPass] = useState(false)
+    // console.log(user)
+
+    useEffect(() => {
+        let updateValue = async () => {
+            setUpdatedUser(user)
+        }
+        updateValue()
+    }, [user])
+
+    let handleChange = (event) => {
+        setUpdatedUser({ ...updatedUser, [event.target.name]: event.target.value })
+    }
+
+    let handleEdit = () => {
+        setIsEdit(true)
+
+    }
+    let handleSaveChange = async () => {
+
+        let api = "https://freeapi.gravitycoding.com/api/user/" + updatedUser._id
+        let resp = await fetch(api, {
+            method: "PUT",
+            headers: {
+                'Content-Type': "application/json"
+            },
+            body: JSON.stringify(updatedUser)
+        })
+
+        resp.status === 200 || resp.status === 201 ? setIsEdit(false) : alert("Try Again")
+    }
+
+
+    // Chnage Password
+    let handleSavePass = async () => {
+        // setIsPass(false)
+        let api = "https://freeapi.gravitycoding.com/api/user/" + updatedUser._id
+        let resp = await fetch(api, {
+            method: "PATCH",
+            headers: {
+                'Content-Type': "application/json"
+            },
+            body: JSON.stringify({ password: pass })
+        })
+
+        resp.status === 200 || resp.status === 201 ? setIsEdit(false) : alert("Try Again")
+    }
+
+    let handlePass = () => {
+        setIsPass(true)
+    }
 
     return (
         <div className="min-h-screen bg-neutral-900 text-white p-6">
@@ -40,8 +93,10 @@ const UserProfile = () => {
                             </label>
                             <input
                                 type="text"
-                                value={user.name}
-                                disabled
+                                value={updatedUser.name}
+                                name="name"
+                                onChange={handleChange}
+                                disabled={isEdit ? false : true}
                                 className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-gray-300"
                             />
                         </div>
@@ -52,8 +107,10 @@ const UserProfile = () => {
                             </label>
                             <input
                                 type="email"
-                                value={user.email}
-                                disabled
+                                name="email"
+                                value={updatedUser.email}
+                                onChange={handleChange}
+                                disabled={isEdit ? false : true}
                                 className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-gray-300"
                             />
                         </div>
@@ -64,8 +121,10 @@ const UserProfile = () => {
                             </label>
                             <input
                                 type="text"
-                                value={user.phone}
-                                disabled
+                                value={updatedUser.phone}
+                                name="phone"
+                                onChange={handleChange}
+                                disabled={isEdit ? false : true}
                                 className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-gray-300"
                             />
                         </div>
@@ -76,8 +135,11 @@ const UserProfile = () => {
                             </label>
                             <input
                                 type="password"
-                                value={user.pass}
-                                disabled
+                                value={pass}
+                                onChange={(event) => {
+                                    setPass(event.target.value)
+                                }}
+                                disabled={isPass ? false : true}
                                 className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-gray-300"
                             />
                         </div>
@@ -110,11 +172,11 @@ const UserProfile = () => {
 
                     {/* Actions */}
                     <div className="mt-6 flex gap-4">
-                        <button className="bg-blue-600 px-5 py-2 rounded-lg hover:bg-blue-700 transition">
-                            Edit Profile
+                        <button className="bg-blue-600 px-5 py-2 rounded-lg hover:bg-blue-700 transition" onClick={isEdit ? handleSaveChange : handleEdit}>
+                            {isEdit ? 'Save Changes' : 'Edit Profile'}
                         </button>
-                        <button className="bg-neutral-700 px-5 py-2 rounded-lg hover:bg-neutral-600 transition">
-                            Change Password
+                        <button className="bg-neutral-700 px-5 py-2 rounded-lg hover:bg-neutral-600 transition" onClick={isPass ? handleSavePass : handlePass}>
+                            {isPass ? 'Save' : 'Change Pass'}
                         </button>
                     </div>
                 </div>
