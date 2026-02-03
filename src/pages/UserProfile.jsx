@@ -2,182 +2,182 @@ import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
 const UserProfile = () => {
-
-    const [user, setUser] = useOutletContext()
-    const [updatedUser, setUpdatedUser] = useState({})
-    const [pass, setPass] = useState("")
-    const [isEdit, setIsEdit] = useState(false)
-    const [isPass, setIsPass] = useState(false)
-    // console.log(user)
+    const [user, setUser] = useOutletContext();
+    const [updatedUser, setUpdatedUser] = useState({});
+    const [pass, setPass] = useState("");
+    const [isEdit, setIsEdit] = useState(false);
+    const [isPass, setIsPass] = useState(false);
 
     useEffect(() => {
-        let updateValue = async () => {
-            setUpdatedUser(user)
-        }
-        updateValue()
-    }, [user])
+        setUpdatedUser(user);
+    }, [user]);
 
-    let handleChange = (event) => {
-        setUpdatedUser({ ...updatedUser, [event.target.name]: event.target.value })
-    }
+    const handleChange = (e) => {
+        setUpdatedUser({ ...updatedUser, [e.target.name]: e.target.value });
+    };
 
-    let handleEdit = () => {
-        setIsEdit(true)
-
-    }
-    let handleSaveChange = async () => {
-
-        let api = "https://freeapi.gravitycoding.com/api/user/" + updatedUser._id
-        let resp = await fetch(api, {
+    const handleSaveChange = async () => {
+        const api = `https://freeapi.gravitycoding.com/api/user/${updatedUser._id}`;
+        const resp = await fetch(api, {
             method: "PUT",
-            headers: {
-                'Content-Type': "application/json"
-            },
-            body: JSON.stringify(updatedUser)
-        })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedUser),
+        });
 
-        resp.status === 200 || resp.status === 201 ? setIsEdit(false) : alert("Try Again")
-    }
+        resp.ok ? setIsEdit(false) : alert("Try Again");
+    };
 
-
-    // Chnage Password
-    let handleSavePass = async () => {
-        // setIsPass(false)
-        let api = "https://freeapi.gravitycoding.com/api/user/" + updatedUser._id
-        let resp = await fetch(api, {
+    const handleSavePass = async () => {
+        const api = `https://freeapi.gravitycoding.com/api/user/${updatedUser._id}`;
+        const resp = await fetch(api, {
             method: "PATCH",
-            headers: {
-                'Content-Type': "application/json"
-            },
-            body: JSON.stringify({ password: pass })
-        })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password: pass }),
+        });
 
-        resp.status === 200 || resp.status === 201 ? setIsEdit(false) : alert("Try Again")
-    }
-
-    let handlePass = () => {
-        setIsPass(true)
-    }
+        if (resp.ok) {
+            setIsPass(false);
+            setPass("");
+        } else {
+            alert("Try Again");
+        }
+    };
 
     return (
-        <div className="min-h-screen bg-neutral-900 text-white p-6">
-
+        <div className="min-h-screen w-full bg-neutral-950 text-white p-6">
             {/* Header */}
-            <div className="mb-6">
-                <h1 className="text-2xl font-semibold">User Profile</h1>
+            <div className="mb-8">
+                <h1 className="text-3xl font-semibold">My Profile</h1>
                 <p className="text-gray-400 text-sm">
-                    View your account details
+                    Manage your personal information
                 </p>
             </div>
 
             {/* Profile Card */}
-            <div className="bg-neutral-800 rounded-xl shadow p-6 flex flex-col md:flex-row gap-6">
-
+            <div className="bg-neutral-900 rounded-2xl shadow-xl p-6 flex flex-col lg:flex-row gap-8">
                 {/* Avatar */}
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center lg:w-1/4">
                     <img
-                        src={`https://ui-avatars.com/api/?name=${user.name}&background=2563eb&color=fff&size=128`}
+                        src={`https://ui-avatars.com/api/?name=${user.name}&background=2563eb&color=fff&size=256`}
                         alt="User"
-                        className="w-32 h-32 rounded-full border-4 border-neutral-700"
+                        className="w-36 h-36 rounded-full border-4 border-neutral-800"
                     />
-                    <span className="mt-3 text-sm text-gray-400">User ID: {user.id ? user.id : "not found"}</span>
+                    <p className="mt-3 text-xs text-gray-400">
+                        ID: {user._id || "N/A"}
+                    </p>
+                    <span className="mt-2 px-3 py-1 text-xs rounded-full bg-green-500/10 text-green-400">
+                        Active Account
+                    </span>
                 </div>
 
-                {/* User Info */}
-                <div className="flex-1">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Info */}
+                <div className="flex-1 space-y-8">
+                    {/* Personal Info */}
+                    <div>
+                        <h2 className="text-lg font-medium mb-4">Personal Details</h2>
 
-                        <div>
-                            <label className="block text-sm text-gray-400 mb-1">
-                                Full Name
-                            </label>
-                            <input
-                                type="text"
-                                value={updatedUser.name}
-                                name="name"
-                                onChange={handleChange}
-                                disabled={isEdit ? false : true}
-                                className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-gray-300"
-                            />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {["name", "email", "phone"].map((field) => (
+                                <div key={field}>
+                                    <label className="block text-sm text-gray-400 mb-1 capitalize">
+                                        {field}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name={field}
+                                        value={updatedUser[field] || ""}
+                                        onChange={handleChange}
+                                        disabled={!isEdit}
+                                        className={`w-full px-4 py-2 rounded-lg border 
+                      ${isEdit
+                                                ? "bg-neutral-800 border-neutral-700 text-white"
+                                                : "bg-neutral-900 border-neutral-800 text-gray-400"
+                                            }`}
+                                    />
+                                </div>
+                            ))}
                         </div>
 
-                        <div>
-                            <label className="block text-sm text-gray-400 mb-1">
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={updatedUser.email}
-                                onChange={handleChange}
-                                disabled={isEdit ? false : true}
-                                className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-gray-300"
-                            />
+                        {/* Actions */}
+                        <div className="mt-5 flex gap-3">
+                            {!isEdit ? (
+                                <button
+                                    onClick={() => setIsEdit(true)}
+                                    className="bg-blue-600 px-5 py-2 rounded-lg hover:bg-blue-700 transition cursor-pointer"
+                                >
+                                    Edit Profile
+                                </button>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={handleSaveChange}
+                                        className="bg-green-600 px-5 py-2 rounded-lg hover:bg-green-700 transition cursor-pointer"
+                                    >
+                                        Save
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setIsEdit(false);
+                                            setUpdatedUser(user);
+                                        }}
+                                        className="bg-neutral-700 px-5 py-2 rounded-lg hover:bg-neutral-600 cursor-pointer"
+                                    >
+                                        Cancel
+                                    </button>
+                                </>
+                            )}
                         </div>
+                    </div>
 
-                        <div>
-                            <label className="block text-sm text-gray-400 mb-1">
-                                Phone
-                            </label>
-                            <input
-                                type="text"
-                                value={updatedUser.phone}
-                                name="phone"
-                                onChange={handleChange}
-                                disabled={isEdit ? false : true}
-                                className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-gray-300"
-                            />
-                        </div>
+                    {/* Password Section */}
+                    <div className="border-t border-neutral-800 pt-6">
+                        <h2 className="text-lg font-medium mb-4">Security</h2>
 
-                        <div>
+                        <div className="max-w-md">
                             <label className="block text-sm text-gray-400 mb-1">
-                                Password
+                                New Password
                             </label>
                             <input
                                 type="password"
                                 value={pass}
-                                onChange={(event) => {
-                                    setPass(event.target.value)
-                                }}
-                                disabled={isPass ? false : true}
-                                className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-gray-300"
+                                onChange={(e) => setPass(e.target.value)}
+                                disabled={!isPass}
+                                className={`w-full px-4 py-2 rounded-lg border 
+                  ${isPass
+                                        ? "bg-neutral-800 border-neutral-700"
+                                        : "bg-neutral-900 border-neutral-800 text-gray-500"
+                                    }`}
                             />
                         </div>
 
-                        <div>
-                            <label className="block text-sm text-gray-400 mb-1">
-                                Account Status
-                            </label>
-                            <input
-                                type="text"
-                                value="Active"
-                                disabled
-                                className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-green-400"
-                            />
+                        <div className="mt-4 flex gap-3">
+                            {!isPass ? (
+                                <button
+                                    onClick={() => setIsPass(true)}
+                                    className="bg-red-600/20 text-red-400 px-5 py-2 rounded-lg hover:bg-red-600/30 cursor-pointer"
+                                >
+                                    Change Password
+                                </button>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={handleSavePass}
+                                        className="bg-red-600 px-5 py-2 rounded-lg hover:bg-red-700 cursor-pointer"
+                                    >
+                                        Update Password
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setIsPass(false);
+                                            setPass("");
+                                        }}
+                                        className="bg-neutral-700 px-5 py-2 rounded-lg hover:bg-neutral-600 cursor-pointer"
+                                    >
+                                        Cancel
+                                    </button>
+                                </>
+                            )}
                         </div>
-
-                        <div>
-                            <label className="block text-sm text-gray-400 mb-1">
-                                Joined On
-                            </label>
-                            <input
-                                type="text"
-                                value="10 Jan 2026"
-                                disabled
-                                className="w-full px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-gray-300"
-                            />
-                        </div>
-
-                    </div>
-
-                    {/* Actions */}
-                    <div className="mt-6 flex gap-4">
-                        <button className="bg-blue-600 px-5 py-2 rounded-lg hover:bg-blue-700 transition" onClick={isEdit ? handleSaveChange : handleEdit}>
-                            {isEdit ? 'Save Changes' : 'Edit Profile'}
-                        </button>
-                        <button className="bg-neutral-700 px-5 py-2 rounded-lg hover:bg-neutral-600 transition" onClick={isPass ? handleSavePass : handlePass}>
-                            {isPass ? 'Save' : 'Change Pass'}
-                        </button>
                     </div>
                 </div>
             </div>

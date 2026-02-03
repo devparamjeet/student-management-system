@@ -1,67 +1,88 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Signup = () => {
-
+    const navigate = useNavigate();
 
     const [data, setData] = useState({
         name: "",
         email: "",
         phone: "",
-        password: ""
-    })
+        password: "",
+    });
 
-    // To create a replica/clone of navigation function(useNavigation())
-    let navigate = useNavigate()
+    const handleChange = (e) => {
+        setData({ ...data, [e.target.name]: e.target.value });
+    };
 
-    let handleChange = (event) => {
-        setData({ ...data, [event.target.name]: event.target.value })
-    }
+    const handleData = async (e) => {
+        e.preventDefault();
 
-    let handleData = async (e) => {
-        // to prevent page reload
-        e.preventDefault()
+        try {
+            const resp = await fetch(
+                "https://freeapi.gravitycoding.com/api/users",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                }
+            );
 
-        // let url = "http://localhost:3000/users"
-        let url = "https://freeapi.gravitycoding.com/api/users"
-        let resp = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-
-        resp.status === 200 || resp.status === 201 ? navigate("/login") : alert("Try Again")
-    }
-
+            if (resp.status === 200 || resp.status === 201) {
+                navigate("/login");
+            } else {
+                alert("Try Again");
+            }
+        } catch (error) {
+            alert("Something went wrong");
+        }
+    };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-neutral-900">
-            <div className="w-full max-w-md bg-neutral-800 rounded-xl shadow-xl p-8">
+        <div
+            className="min-h-screen flex items-center justify-center bg-cover bg-center relative"
+            style={{
+                backgroundImage:
+                    "url('https://images.unsplash.com/photo-1519389950473-47ba0277781c')",
+            }}
+        >
+            {/* Dark overlay */}
+            <div className="absolute inset-0 bg-black/60"></div>
+
+            {/* Glassmorphism Card */}
+            <div
+                className="relative w-full max-w-md rounded-2xl p-8
+                   bg-white/10 backdrop-blur-xl
+                   border border-white/20
+                   shadow-2xl"
+            >
                 <h2 className="text-2xl font-semibold text-center text-white mb-6">
-                    Sign Up
+                    Create Account
                 </h2>
 
-                <form>
-                    {/* Name */}
+                <form onSubmit={handleData}>
+                    {/* Full Name */}
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                        <label className="block text-sm text-white mb-1">
                             Full Name
                         </label>
                         <input
                             type="text"
-                            placeholder="Enter your name"
                             name="name"
                             value={data.name}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 bg-neutral-900 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"
+                            required
+                            placeholder="Enter your name"
+                            className="w-full px-4 py-2 bg-white/10 text-white
+                         border border-white/20 rounded-lg
+                         placeholder-white/60
+                         focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
 
                     {/* Email */}
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                        <label className="block text-sm text-white mb-1">
                             Email
                         </label>
                         <input
@@ -69,14 +90,18 @@ const Signup = () => {
                             name="email"
                             value={data.email}
                             onChange={handleChange}
+                            required
                             placeholder="Enter your email"
-                            className="w-full px-4 py-2 bg-neutral-900 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"
+                            className="w-full px-4 py-2 bg-white/10 text-white
+                         border border-white/20 rounded-lg
+                         placeholder-white/60
+                         focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
 
                     {/* Phone */}
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                        <label className="block text-sm text-white mb-1">
                             Phone
                         </label>
                         <input
@@ -84,14 +109,18 @@ const Signup = () => {
                             name="phone"
                             value={data.phone}
                             onChange={handleChange}
+                            required
                             placeholder="Enter your phone number"
-                            className="w-full px-4 py-2 bg-neutral-900 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"
+                            className="w-full px-4 py-2 bg-white/10 text-white
+                         border border-white/20 rounded-lg
+                         placeholder-white/60
+                         focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
 
                     {/* Password */}
                     <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                        <label className="block text-sm text-white mb-1">
                             Password
                         </label>
                         <input
@@ -99,26 +128,30 @@ const Signup = () => {
                             name="password"
                             value={data.password}
                             onChange={handleChange}
+                            required
                             placeholder="Create a password"
-                            className="w-full px-4 py-2 bg-neutral-900 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"
+                            className="w-full px-4 py-2 bg-white/10 text-white
+                         border border-white/20 rounded-lg
+                         placeholder-white/60
+                         focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
 
                     {/* Button */}
                     <button
-                        onClick={handleData}
                         type="submit"
-                        className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition"
+                        className="w-full bg-blue-600 text-white py-2 rounded-lg
+                       font-medium hover:bg-blue-700 transition"
                     >
                         Create Account
                     </button>
                 </form>
 
-                <p className="text-sm text-center text-gray-400 mt-4">
+                <p className="text-sm text-center text-white/70 mt-4">
                     Already have an account?{" "}
-                    <span className="text-blue-400 cursor-pointer hover:underline">
+                    <Link to="/login" className="text-blue-400 hover:underline">
                         Login
-                    </span>
+                    </Link>
                 </p>
             </div>
         </div>
