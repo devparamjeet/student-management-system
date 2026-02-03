@@ -5,7 +5,7 @@ import UserNavbar from './components/UserNavbar'
 
 const UserOutlet = () => {
 
-    const [id, setId] = useState(JSON.parse(localStorage.getItem("user_id")))
+    const [id, setId] = useState(localStorage.getItem("user_id"))
 
     const [data, setData] = useState({})
 
